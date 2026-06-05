@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Forex SMC Scanner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.0.0/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🔥 Advanced Forex SMC Scanner</h1>
+                <div class="header-actions">
+                    <button id="loginBtn" class="btn btn-primary">Login to Broker</button>
+                    <button id="settingsBtn" class="btn btn-secondary">Settings</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <!-- Left Sidebar - Controls -->
+            <aside class="sidebar">
+                <div class="section">
+                    <h3>Chart Upload</h3>
+                    <input type="file" id="chartUpload" accept="image/*" class="file-input">
+                    <button id="scanBtn" class="btn btn-success">Scan Chart</button>
+                    <div id="uploadStatus" class="status"></div>
+                </div>
+
+                <div class="section">
+                    <h3>Pair Selection</h3>
+                    <select id="pairSelect" class="input">
+                        <option>EURUSD</option>
+                        <option>GBPUSD</option>
+                        <option>USDJPY</option>
+                        <option>AUDUSD</option>
+                        <option>USDCAD</option>
+                        <option>NZDUSD</option>
+                        <option>XAUUSD</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <h3>Timeframe</h3>
+                    <div class="timeframe-buttons">
+                        <button class="tf-btn" data-tf="1m">1M</button>
+                        <button class="tf-btn" data-tf="5m">5M</button>
+                        <button class="tf-btn" data-tf="15m">15M</button>
+                        <button class="tf-btn" data-tf="1h">1H</button>
+                        <button class="tf-btn" data-tf="4h">4H</button>
+                        <button class="tf-btn active" data-tf="1d">1D</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Trading Mode</h3>
+                    <div class="mode-selector">
+                        <label><input type="radio" name="mode" value="scalp"> Scalp (1-5 min)</label>
+                        <label><input type="radio" name="mode" value="swing" checked> Swing (1h+)</label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Trade Parameters</h3>
+                    <input type="number" id="lotSize" placeholder="Lot Size" class="input" value="1">
+                    <input type="number" id="riskPercent" placeholder="Risk %" class="input" value="2">
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Analysis Results -->
+                <section class="analysis-section">
+                    <h2>📊 Live Analysis</h2>
+                    
+                    <!-- Quick Stats -->
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <span class="label">Bias</span>
+                            <span class="value" id="biasValue">-</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="label">Direction</span>
+                            <span class="value" id="directionValue">-</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="label">Confidence</span>
+                            <span class="value confidence" id="confidenceValue">0%</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="label">Risk/Reward</span>
+                            <span class="value" id="rrValue">-</span>
+                        </div>
+                    </div>
+
+                    <!-- SMC Signals -->
+                    <div class="signals-grid">
+                        <div class="signal-card smc-signals">
+                            <h3>🏛️ SMC Signals</h3>
+                            <div class="signal-list">
+                                <div class="signal-item">
+                                    <span class="signal-name">Order Block (OB)</span>
+                                    <span class="signal-status" id="obSignal">Not Detected</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">CHOCH</span>
+                                    <span class="signal-status" id="chochSignal">Not Detected</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">Break of Structure (BOS)</span>
+                                    <span class="signal-status" id="bosSignal">Not Detected</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">Liquidity Pool</span>
+                                    <span class="signal-status" id="liqSignal">Not Detected</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="signal-card ta-signals">
+                            <h3>📈 Technical Confluence</h3>
+                            <div class="signal-list">
+                                <div class="signal-item">
+                                    <span class="signal-name">ADX Trend</span>
+                                    <span class="signal-status" id="adxSignal">-</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">RSI</span>
+                                    <span class="signal-status" id="rsiSignal">-</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">MACD</span>
+                                    <span class="signal-status" id="macdSignal">-</span>
+                                </div>
+                                <div class="signal-item">
+                                    <span class="signal-name">Volume</span>
+                                    <span class="signal-status" id="volSignal">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entry/Exit Levels -->
+                    <div class="levels-section">
+                        <h3>💰 Entry & Exit Levels</h3>
+                        <div class="levels-grid">
+                            <div class="level-item">
+                                <label>Entry Point</label>
+                                <input type="text" id="entryLevel" class="level-input" readonly>
+                            </div>
+                            <div class="level-item">
+                                <label>TP1</label>
+                                <input type="text" id="tp1Level" class="level-input" readonly>
+                            </div>
+                            <div class="level-item">
+                                <label>TP2</label>
+                                <input type="text" id="tp2Level" class="level-input" readonly>
+                            </div>
+                            <div class="level-item">
+                                <label>TP3</label>
+                                <input type="text" id="tp3Level" class="level-input" readonly>
+                            </div>
+                            <div class="level-item">
+                                <label>Stop Loss</label>
+                                <input type="text" id="slLevel" class="level-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Prediction & Analysis -->
+                    <div class="prediction-section">
+                        <h3>🤖 AI Analysis & Prediction</h3>
+                        <div class="prediction-content">
+                            <p id="predictionText">Upload a chart or scan to generate detailed analysis...</p>
+                            <div class="reasoning">
+                                <h4>Why this prediction?</h4>
+                                <ul id="reasoningList">
+                                    <li>Awaiting chart analysis...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Viewer -->
+                    <div class="chart-viewer">
+                        <h3>📋 Chart Analysis</h3>
+                        <div id="chartContainer" class="chart-container">
+                            <canvas id="analysisChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Trade Summary -->
+                <section class="trade-summary">
+                    <h2>📍 Trade Summary</h2>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="label">Current Price</span>
+                            <span class="value" id="currentPrice">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Entry Price</span>
+                            <span class="value" id="summaryEntry">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Stop Loss</span>
+                            <span class="value sl" id="summarySL">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Take Profit</span>
+                            <span class="value tp" id="summaryTP">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Potential Profit/Loss</span>
+                            <span class="value" id="summaryPnL">-</span>
+                        </div>
+                    </div>
+                    <button id="executeTradeBtn" class="btn btn-success btn-large">Execute Trade</button>
+                </section>
+
+                <!-- Active Trades -->
+                <section class="active-trades">
+                    <h2>📊 Active Trades</h2>
+                    <div id="tradesTable" class="trades-table">
+                        <p>No active trades</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Broker Login</h2>
+            <div class="login-form">
+                <select id="brokerSelect" class="input">
+                    <option>Select Broker</option>
+                    <option>MetaTrader 4</option>
+                    <option>MetaTrader 5</option>
+                    <option>cTrader</option>
+                </select>
+                <input type="text" id="loginUsername" placeholder="Username" class="input">
+                <input type="password" id="loginPassword" placeholder="Password" class="input">
+                <input type="text" id="loginServer" placeholder="Server" class="input">
+                <button id="submitLoginBtn" class="btn btn-success">Connect Account</button>
+                <div id="loginStatus" class="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Settings</h2>
+            <div class="settings-form">
+                <label>
+                    <input type="checkbox" id="notificationsEnabled" checked>
+                    Enable Notifications
+                </label>
+                <label>
+                    <input type="checkbox" id="autoTradeEnabled">
+                    Auto-Trade on Signal
+                </label>
+                <label>
+                    <input type="checkbox" id="darkMode">
+                    Dark Mode
+                </label>
+                <hr>
+                <h3>SMC Sensitivity</h3>
+                <label>OB Detection Threshold: <input type="range" id="obThreshold" min="0.1" max="1" step="0.1" value="0.5"></label>
+                <label>BOS Threshold: <input type="range" id="bosThreshold" min="0.1" max="1" step="0.1" value="0.5"></label>
+                <h3>TA Settings</h3>
+                <label>ADX Period: <input type="number" id="adxPeriod" value="14" min="5" max="50"></label>
+                <label>RSI Period: <input type="number" id="rsiPeriod" value="14" min="5" max="50"></label>
+                <button id="saveSettingsBtn" class="btn btn-success">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/technical-analysis.js"></script>
+    <script src="js/smc-scanner.js"></script>
+    <script src="js/chart-analyzer.js"></script>
+    <script src="js/trade-engine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
