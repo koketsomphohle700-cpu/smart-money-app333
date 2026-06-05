@@ -1,0 +1,26 @@
+# Maven
+target/
+*.jar
+*.war
+*.ear
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Spring Boot
+application-*.properties
+application-*.yml
+
+# Build
+out/
+build/
+.gradle/
+
+# Misc
+*.log
