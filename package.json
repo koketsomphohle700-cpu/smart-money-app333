@@ -1,0 +1,87 @@
+{
+  "name": "aviator-smart-guesser",
+  "version": "1.0.0",
+  "description": "Real-time Aviator multiplier predictor for betway.co.za with ML predictions and automated trading",
+  "main": "index.js",
+  "author": "SmartMoneyApp",
+  "license": "MIT",
+  "homepage": "https://github.com/koketsomphohle700-cpu/smart-money-app333",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koketsomphohle700-cpu/smart-money-app333.git",
+    "directory": "feature/aviator-predictor"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "build:webapp": "webpack --mode production --config webpack.webapp.js",
+    "build:apk": "cd mobile && ./gradlew assembleRelease",
+    "build:ios": "cd mobile && xcodebuild -workspace Aviator.xcworkspace -scheme Aviator -configuration Release",
+    "build:electron": "electron-builder --publish always",
+    "build:all": "npm run build:webapp && npm run build:apk",
+    "deploy:webapp": "vercel --prod",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir dist",
+    "deploy:github-pages": "gh-pages -d dist",
+    "serve": "http-server dist -p 8080",
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "clean": "rm -rf dist node_modules",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chart.js": "^3.9.1",
+    "lightweight-charts": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "^0.72.0",
+    "ws": "^8.14.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "@babel/preset-react": "^7.22.0",
+    "babel-loader": "^9.1.2",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-bundle-analyzer": "^4.9.0",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "jest": "^29.6.0",
+    "eslint": "^8.46.0",
+    "prettier": "^3.0.0",
+    "gh-pages": "^6.0.0",
+    "vercel": "^32.0.0",
+    "netlify-cli": "^17.0.0",
+    "electron": "^25.4.0",
+    "electron-builder": "^24.4.0",
+    "http-server": "^14.1.1"
+  },
+  "keywords": [
+    "aviator",
+    "predictor",
+    "betway",
+    "machine-learning",
+    "trading-bot",
+    "network-interception",
+    "real-time",
+    "multiplier-prediction"
+  ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
